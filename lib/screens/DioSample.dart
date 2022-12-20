@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-
+import 'package:travelverse_single_post_fetch/extra/model/PostResponse.dart';
 import '../dioEasyAp/http_service.dart';
 
 class DioSample extends StatefulWidget {
@@ -11,59 +11,65 @@ class DioSample extends StatefulWidget {
 }
 
 class _DioSampleState extends State<DioSample> {
-  
-  void getHttp() async {
-    try {
-      var response = await Dio().get('https://travelverse-mobile-server.onrender.com/post/632c79d095ce7d9364e088f8/posts');
-      print(response);
-    } catch (e) {
-      print(e);
-    }
-  }
-  //
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    // HttpService httpService;
-    //
-    // httpService.getHttpOriginal();
+    getPost();
 
   }
-  
+
+  Future<PostResponse> getPost() async {
+    try {
+      Response response =
+          await DioClient().get('/post/632c79d095ce7d9364e088f8/posts');
+
+      if (response.statusCode == 200) {
+        PostResponse postResponse = PostResponse.fromJson(response.data[0]);
+        //[0] because response in an array of maps
+        print("RESPONSE");
+        print(postResponse);
+        // return postResponse.title.toString();
+        return postResponse;
+      }
+    } on DioError catch (e) {
+      print(e);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    // getHttp();
-
-    HttpService httpService;
-
-    httpService.getHttpOriginal();
-
-    // try {
-    //   Future getPost() async {
-    //     Response response = await httpService.getHttp(
-    //         '/post/632c79d095ce7d9364e088f8/posts');
-    //
-    //     if(response.statusCode==200){
-    //       print("clean");
-    //     }
-    //
-    //     if(response.data!=null){
-    //       print("bad null");
-    //     }else{
-    //       print("object jjjs");
-    //     }
-    //
-    //   }
-    //   getPost();
-    // }catch(e){
-    //   print(e);
-    // }
-
-
-
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Single post fetch"),
+      ),
+      body: FutureBuilder<PostResponse>(
+        future: getPost(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            print(snapshot);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text("ERROR"));
+          } else {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  snapshot.data.title.toString(),
+                ),
+                Text(
+                  snapshot.data.description.toString(),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+    );
   }
 }
-

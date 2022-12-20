@@ -1,22 +1,22 @@
 
 import 'package:dio/dio.dart';
 
-class HttpService{
+class DioClient{
     Dio dio;
 
     // or new Dio with a BaseOptions instance.
-    HttpService(){
+    DioClient(){
       var options = BaseOptions(
         baseUrl: 'https://travelverse-mobile-server.onrender.com',
-        connectTimeout: 30000,
-        receiveTimeout: 20000, // 20 sec
+        connectTimeout: 80000,
+        receiveTimeout: 80000, // 80 sec
       );
       dio = Dio(options);
 
       initializeInterceptors();
     }
 
-    Future<Response> getHttp(String endpoint) async {
+    Future<Response> get(String endpoint) async {
       Response response;
 
       try {
@@ -27,8 +27,6 @@ class HttpService{
       } catch (e) {
         print(e);
       }
-
-
 
     }
 
