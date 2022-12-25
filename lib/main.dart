@@ -1,58 +1,52 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:travelverse_single_post_fetch/screens/DioSample.dart';
+import 'package:provider/provider.dart';
+import 'package:travelverse_single_post_fetch/models/PostResponse.dart';
+import 'package:travelverse_single_post_fetch/provider/PostProvider.dart';
+import 'package:travelverse_single_post_fetch/screens/postScreen.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  //----------------------------
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  //----------------------------
+
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider (
+            create: (context) => PostProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        home: PostScreen(),
       ),
-      home: DioSample(),
     );
   }
 }
-
-// class SinglePostPage extends StatefulWidget {
-//   const SinglePostPage({Key key}) : super(key: key);
-//
-//   @override
-//   State<SinglePostPage> createState() => _SinglePostPageState();
-// }
-//
-// class _SinglePostPageState extends State<SinglePostPage> {
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Single Post Page"),
-//       ),
-//       body: FutureBuilder(
-//         future: PostApiServices().fetchPost(),
-//         builder: (context, snapshot){
-//           if(!snapshot.hasData){
-//             // print(snapshot);
-//             return Center(child: CircularProgressIndicator(),);
-//           }else if(snapshot.hasError){
-//             return Center(child: Text("ERROR"));
-//           }else{
-//             return Center(child: Text(snapshot.data));
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
 

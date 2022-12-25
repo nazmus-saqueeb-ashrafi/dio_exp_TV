@@ -1,4 +1,9 @@
-class PostResponse {
+// app.quicktype.io
+// (changes json into dart class)
+
+import 'package:flutter/cupertino.dart';
+
+class PostResponse with ChangeNotifier {
   PostResponse({
     this.id,
     this.userId,
